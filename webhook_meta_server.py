@@ -9,15 +9,39 @@ VERIFY_TOKEN = 'mygentlevision2025'
 ACCESS_TOKEN = 'EAAk0jZA3kkOwBO7XtAY4XpUGdsZAVe2lzgjv6b0KLJZAMRV3qkIOnZCg7c3HjnEDGlzXDui8OxFVeCeHZBnQ5r6mTfjZC7cAOeZCUAHgsISlR84Ox1ZAffhW3WPbVCRNOA1ZBQmH2zgOZArzyak7Op7z9Pr2aOCwNCVwk0cms6bn7zIbYQhcRNJGyiNmHY5XrailV4h2LJOKbkTOUpGLKCLnK7eP0YFDlJ5mXO2ZBhoFvEZApT97TynTzm16KpBysf2cLVcfzAZDZD'
 GRAPH_API_URL = 'https://graph.facebook.com/v18.0/'
 
-# Temporary trigger words (nanti diganti tarik dari Notion)
-TRIGGER_WORDS = ['growth', 'value', 'power']
+# Tambahan untuk tarik Notion
+NOTION_TOKEN = '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'
+DATABASE_ID = '1e23d146-b43a-80eb-abdd-d8edad000a4b'
+NOTION_URL = f"https://api.notion.com/v1/databases/{DATABASE_ID}/query"
 
-# Temporary Dropbox PDF link mapping
-PDF_LINKS = {
-    'growth': 'https://www.dropbox.com/s/sample_growth.pdf?dl=1',
-    'value': 'https://www.dropbox.com/s/sample_value.pdf?dl=1',
-    'power': 'https://www.dropbox.com/s/sample_power.pdf?dl=1'
+headers = {
+    "Authorization": f"Bearer {NOTION_TOKEN}",
+    "Content-Type": "application/json",
+    "Notion-Version": "2022-06-28"
 }
+
+def fetch_notion_triggers():
+    response = requests.post(NOTION_URL, headers=headers)
+    data = response.json()
+
+    trigger_words = []
+    pdf_mapping = {}
+
+    for result in data['results']:
+        properties = result['properties']
+
+        if 'trigger key' in properties and properties['trigger key']['rich_text']:
+            trigger = properties['trigger key']['rich_text'][0]['text']['content']
+            trigger_words.append(trigger.lower())
+
+            if 'PDF Idea' in properties and properties['PDF Idea']['rich_text']:
+                pdf_title = properties['PDF Idea']['rich_text'][0]['text']['content']
+                pdf_mapping[trigger.lower()] = f"https://www.dropbox.com/s/{pdf_title.replace(' ', '_')}.pdf?dl=1"
+
+    return trigger_words, pdf_mapping
+
+# Fetch dynamic triggers and PDF links dari Notion
+TRIGGER_WORDS, PDF_LINKS = fetch_notion_triggers()
 
 @app.route('/', methods=['GET', 'POST'])
 def webhook():
@@ -48,7 +72,6 @@ def webhook():
 
         return '200 OK', 200
 
-
 def send_dm(user_id, trigger_word):
     if trigger_word not in PDF_LINKS:
         print(f"No PDF link mapped for trigger {trigger_word}")
@@ -62,7 +85,6 @@ def send_dm(user_id, trigger_word):
     url = f"{GRAPH_API_URL}me/messages?access_token={ACCESS_TOKEN}"
     response = requests.post(url, json=message_data)
     print(f"Sent DM to {user_id}: {response.text}")
-
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
