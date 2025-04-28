@@ -11,19 +11,19 @@ app = Flask(__name__)
 
 # IG Webhook Tokens
 VERIFY_TOKEN = 'mygentlevision2025'
-ACCESS_TOKEN = 'YOUR_IG_PAGE_ACCESS_TOKEN'
+ACCESS_TOKEN = 'EAAJjZAJHZBO5p0BAPZAiZAQeX2ZBoeHfyZAe1ZAOt4j7G4qxDx6IZCEkG23tKcmZC3kpob2Y6XfM5v3qZCq2TZA2C1gA4Ai8ZCXbnGJ9whTfZB5KZC5kzDe9m3gZB7Hf0Bv7QxFylZBd6u2pAwrPP1jqP5ghZASZCwN8dSm2ZBcZCrfRGJtPZBBh3u8YZA9w5yGgE9eo2avcK0CBZCCkqPpOqgZDZD'
 GRAPH_API_URL = 'https://graph.facebook.com/v18.0/'
+
+# Telegram Config
+TELEGRAM_BOT_TOKEN = '6766769297:AAG5yQF4ZsfzZ6i5M1W8-HIh8mJ1eN3PRCE'
+TELEGRAM_CHAT_ID = '6318034884'
 
 # Dropbox Access Token
 DROPBOX_TOKEN = get_access_token()
 
-# Telegram Config
-TELEGRAM_BOT_TOKEN = 'ISI_TOKEN_BOT_KAMU'
-TELEGRAM_CHAT_ID = 'ISI_CHAT_ID_KAMU'
-
 # Dropbox Storage Threshold
 THRESHOLD_MB = 500
-TARGET_FREE_MB = 600
+TARGET_FREE_MB = 1000
 
 # Webhook Routes
 @app.route('/', methods=['GET', 'POST'])
