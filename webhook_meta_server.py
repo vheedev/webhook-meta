@@ -97,15 +97,15 @@ if response.status_code != 200:
 
 data = response.json()
 
-    if 'allocation' not in data or 'used' not in data:
-        send_telegram_message("❌ ERROR: Dropbox response missing 'allocation'.")
-        print("[ERROR] Dropbox API response tidak valid:", data)
-        return float('inf')  # Skip cleanup if unknown
+if 'allocation' not in data or 'used' not in data:
+        print("[ERROR] Response tidak punya data 'allocation' atau 'used'")
+        print("Full Response:", data)
+        return 0
 
-    allocated = data['allocation'].get('allocated', 0)
-    used = data.get('used', 0)
-    free = allocated - used
-    return free / (1024 * 1024)
+    used_mb = data['used'] / 1024 / 1024
+    allocated_mb = data['allocation']['allocated'] / 1024 / 1024
+    free_mb = allocated_mb - used_mb
+    return free_mb
 
 def get_dropbox_files():
     url = 'https://api.dropboxapi.com/2/files/list_folder'
