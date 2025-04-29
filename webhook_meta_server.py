@@ -19,7 +19,7 @@ TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
 # Dropbox Access Token
-DROPBOX_TOKEN = os.environ.get("DROPBOX_TOKEN")
+DROPBOX_TOKEN = os.getenv("DROPBOX_ACCESS_TOKEN")
 
 # Dropbox Storage Threshold
 THRESHOLD_MB = 500
