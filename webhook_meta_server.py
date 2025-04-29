@@ -10,16 +10,16 @@ from dropbox_oauth_handler import get_access_token
 app = Flask(__name__)
 
 # IG Webhook Tokens
-VERIFY_TOKEN = 'mygentlevision2025'
-ACCESS_TOKEN = 'EAAJjZAJHZBO5p0BAPZAiZAQeX2ZBoeHfyZAe1ZAOt4j7G4qxDx6IZCEkG23tKcmZC3kpob2Y6XfM5v3qZCq2TZA2C1gA4Ai8ZCXbnGJ9whTfZB5KZC5kzDe9m3gZB7Hf0Bv7QxFylZBd6u2pAwrPP1jqP5ghZASZCwN8dSm2ZBcZCrfRGJtPZBBh3u8YZA9w5yGgE9eo2avcK0CBZCCkqPpOqgZDZD'
+VERIFY_TOKEN = os.environ.get("IG_VERIFY_TOKEN")
+ACCESS_TOKEN = os.environ.get("IG_ACCESS_TOKEN")
 GRAPH_API_URL = 'https://graph.facebook.com/v18.0/'
 
 # Telegram Config
-TELEGRAM_BOT_TOKEN = "7722270521:AAGexML-V4th9sW4V6ZCXjh_kUp-CcRQ7uI"
-TELEGRAM_CHAT_ID = "1200140372"
+TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
+TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
 
 # Dropbox Access Token
-DROPBOX_TOKEN = get_access_token()
+DROPBOX_TOKEN = os.environ.get("DROPBOX_TOKEN")
 
 # Dropbox Storage Threshold
 THRESHOLD_MB = 500
