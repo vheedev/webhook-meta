@@ -89,7 +89,13 @@ def get_dropbox_storage():
         'Content-Type': 'application/json'
     }
     response = requests.post(url, headers=headers)
-    data = response.json()
+
+if response.status_code != 200:
+    print(f"[ERROR] Dropbox API failed! Status: {response.status_code}")
+    print("Response text:", response.text)
+    return 0  # atau raise Exception jika ingin stop
+
+data = response.json()
 
     if 'allocation' not in data or 'used' not in data:
         send_telegram_message("❌ ERROR: Dropbox response missing 'allocation'.")
