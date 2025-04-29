@@ -15,8 +15,8 @@ ACCESS_TOKEN = 'EAAJjZAJHZBO5p0BAPZAiZAQeX2ZBoeHfyZAe1ZAOt4j7G4qxDx6IZCEkG23tKcm
 GRAPH_API_URL = 'https://graph.facebook.com/v18.0/'
 
 # Telegram Config
-TELEGRAM_BOT_TOKEN = '6766769297:AAG5yQF4ZsfzZ6i5M1W8-HIh8mJ1eN3PRCE'
-TELEGRAM_CHAT_ID = '6318034884'
+TELEGRAM_BOT_TOKEN = "7722270521:AAGexML-V4th9sW4V6ZCXjh_kUp-CcRQ7uI"
+TELEGRAM_CHAT_ID = "1200140372"
 
 # Dropbox Access Token
 DROPBOX_TOKEN = get_access_token()
@@ -49,14 +49,36 @@ def webhook():
         return '200 OK', 200
 
 # Telegram Notif
+def send_telegram_message(message: str) -> bool:
+    """
+    Mengirim pesan ke Telegram Bot secara otomatis.
 
-def send_telegram_message(message):
+    Args:
+        message (str): Pesan yang ingin dikirim.
+
+    Returns:
+        bool: True jika berhasil, False jika gagal.
+    """
     url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
-    payload = {"chat_id": TELEGRAM_CHAT_ID, "text": message}
+    payload = {
+        "chat_id": TELEGRAM_CHAT_ID,
+        "text": message
+    }
     try:
-        requests.post(url, data=payload)
+        response = requests.post(url, data=payload)
+        if response.status_code == 200:
+            return True
+        else:
+            print(f"Gagal kirim pesan. Status code: {response.status_code}, Response: {response.text}")
+            return False
     except Exception as e:
-        print(f"Failed to send Telegram message: {e}")
+        print(f"Exception saat kirim pesan Telegram: {e}")
+        return False
+
+# Example penggunaan manual (bisa dihapus kalau sudah diintegrasi ke server)
+if __name__ == "__main__":
+    test_message = "✅ Test pesan dari server webhook meta berhasil!"
+    send_telegram_message(test_message)
 
 # Dropbox Monitor & Cleanup
 
