@@ -84,11 +84,20 @@ if __name__ == "__main__":
 
 def get_dropbox_storage():
     url = 'https://api.dropboxapi.com/2/users/get_space_usage'
-    headers = {'Authorization': f'Bearer {DROPBOX_TOKEN}', 'Content-Type': 'application/json'}
+    headers = {
+        'Authorization': f'Bearer {DROPBOX_TOKEN}',
+        'Content-Type': 'application/json'
+    }
     response = requests.post(url, headers=headers)
     data = response.json()
-    allocated = data['allocation']['allocated']
-    used = data['used']
+
+    if 'allocation' not in data or 'used' not in data:
+        send_telegram_message("❌ ERROR: Dropbox response missing 'allocation'.")
+        print("[ERROR] Dropbox API response tidak valid:", data)
+        return float('inf')  # Skip cleanup if unknown
+
+    allocated = data['allocation'].get('allocated', 0)
+    used = data.get('used', 0)
     free = allocated - used
     return free / (1024 * 1024)
 
